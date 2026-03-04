@@ -223,7 +223,7 @@ export default function App() {
           </div>
 
           {/* Streak */}
-          <div className="absolute top-[492px] left-[-3px] w-[330px] px-[3px]">
+          <div className="absolute top-[517px] left-[-3px] w-[330px] px-[3px]">
             <p className="font-['Poppins'] text-[15px] leading-[22px] tracking-[-0.3px] text-[#454545] text-center mb-[8px]">
               {streak} day streak
             </p>
