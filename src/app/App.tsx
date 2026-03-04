@@ -13,7 +13,7 @@ export default function App() {
   });
 
   const [habitTitle, setHabitTitle] = useState(() =>
-    localStorage.getItem('habit-title') || 'work on portfolio'
+    localStorage.getItem('habit-title') || 'type habit here'
   );
 
   // Calculate streak
@@ -125,7 +125,7 @@ export default function App() {
       const isToday = date.toDateString() === currentDate.toDateString();
 
       const cellClass = isToday && isSelected
-        ? 'bg-[#b8b8b8] text-[#eaeaea]'
+        ? 'bg-[#b8b8b8] text-[#eaeaea] border border-[#454545]'
         : isSelected
         ? 'bg-[#454545] text-[#eaeaea]'
         : isToday
@@ -165,38 +165,39 @@ export default function App() {
       <div className="w-full max-w-[393px] h-[100dvh] bg-[#eaeaea] relative">
         {/* Main Content */}
         <div className="absolute left-[31px] w-[331px]" style={{ top: 'calc(90px + env(safe-area-inset-top))' }}>
-          {/* Title */}
-          <input
-            type="text"
-            value={habitTitle}
-            onChange={(e) => {
-              setHabitTitle(e.target.value);
-              localStorage.setItem('habit-title', e.target.value);
-            }}
-            className="font-['Poppins'] font-medium text-[32px] leading-[26.539px] tracking-[-1px] text-[#454545] text-center bg-transparent border-none outline-none w-full mb-[16px]"
-          />
+          {/* Title & Date */}
+          <div style={{ transform: 'translateY(-16px)' }}>
+            <input
+              type="text"
+              value={habitTitle}
+              onChange={(e) => {
+                setHabitTitle(e.target.value);
+                localStorage.setItem('habit-title', e.target.value);
+              }}
+              className="font-['Poppins'] font-medium text-[32px] leading-[26.539px] tracking-[-1px] text-[#454545] text-center bg-transparent border-none outline-none w-full mb-[8px]"
+            />
 
-          {/* Date Display */}
-          <p className="font-['Poppins'] text-[11.795px] leading-[17.693px] tracking-[-0.23px] text-[#717182] text-center mb-[32px]">
-            {formatDateDisplay(currentDate)}
-          </p>
+            <p className="font-['Poppins'] text-[11.795px] leading-[17.693px] tracking-[-0.23px] text-[#717182] text-center mb-[32px]">
+              {formatDateDisplay(currentDate)}
+            </p>
+          </div>
 
           {/* Month Navigation */}
-          <div className="flex items-center justify-between mb-[24px]">
-            <button 
+          <div className="relative flex items-center justify-center mb-[20px]" style={{ transform: 'translateY(8px)' }}>
+            <button
               onClick={() => navigateMonth('prev')}
-              className="w-[30px] h-[30px] rounded-[7.372px] flex items-center justify-center hover:bg-[#d8d8d8] transition-colors"
+              className="absolute left-0 w-[30px] h-[30px] rounded-[7.372px] flex items-center justify-center hover:bg-[#d8d8d8] transition-colors"
             >
               <ChevronLeft className="w-[18px] h-[18px] text-[#454545]" strokeWidth={1.5} />
             </button>
-            
-            <p className="font-['Poppins'] font-medium text-[12px] leading-[17.693px] tracking-[-0.23px] text-[#454545]">
+
+            <p className="font-['Poppins'] text-[12px] leading-[17.693px] tracking-[-0.23px] text-[#454545] opacity-60">
               {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
             </p>
-            
-            <button 
+
+            <button
               onClick={() => navigateMonth('next')}
-              className="w-[30px] h-[30px] rounded-[7.372px] flex items-center justify-center hover:bg-[#d8d8d8] transition-colors"
+              className="absolute right-0 w-[30px] h-[30px] rounded-[7.372px] flex items-center justify-center hover:bg-[#d8d8d8] transition-colors"
             >
               <ChevronRight className="w-[18px] h-[18px] text-[#454545]" strokeWidth={1.5} />
             </button>
@@ -205,10 +206,10 @@ export default function App() {
           {/* Calendar */}
           <div className="space-y-[18px]">
             {/* Day Names */}
-            <div className="grid grid-cols-7 gap-0">
+            <div className="grid grid-cols-7 gap-0" style={{ transform: 'translateY(6px)' }}>
               {dayNames.map(day => (
                 <div key={day} className="w-[42px] h-[30px] flex items-center justify-center">
-                  <p className="font-['Poppins'] text-[11.795px] leading-[17.693px] tracking-[-0.23px] text-[#717182]">
+                  <p className="font-['Poppins'] text-[9px] leading-[17.693px] tracking-[-0.23px] text-[#717182] opacity-60">
                     {day}
                   </p>
                 </div>
@@ -221,30 +222,28 @@ export default function App() {
             </div>
           </div>
 
-          {/* Streak Card */}
-          <div className="absolute top-[494px] left-[-3px] w-[330px] bg-[#f5f5f5] rounded-[7.372px] p-[12px]">
-            <div className="mb-[6px]">
-              <p className="font-['Poppins'] font-medium text-[12px] leading-[17.693px] tracking-[-0.23px] text-[#454545] text-center">
-                {streak} day streak
-              </p>
-            </div>
+          {/* Streak */}
+          <div className="absolute top-[492px] left-[-3px] w-[330px] px-[3px]">
+            <p className="font-['Poppins'] text-[15px] leading-[22px] tracking-[-0.3px] text-[#454545] text-center mb-[8px]">
+              {streak} day streak
+            </p>
 
             {/* Progress Bar */}
-            <div className="bg-[#eaeaea] h-[6px] rounded-full overflow-hidden mb-[6px]">
-              <div 
+            <div className="bg-[#c8c8c8] h-[4px] rounded-full overflow-hidden mb-[6px]">
+              <div
                 className="bg-[#454545] h-full transition-all duration-300"
                 style={{ width: `${(completedDaysThisMonth / daysInCurrentMonth) * 100}%` }}
               />
             </div>
 
-            <p className="font-['Poppins'] text-[9px] leading-[17.693px] tracking-[-0.23px] text-[#737372] text-center">
+            <p className="font-['Poppins'] text-[9px] leading-[17.693px] tracking-[-0.23px] text-[#717182] opacity-60 text-center">
               {completedDaysThisMonth}/{daysInCurrentMonth} days
             </p>
           </div>
         </div>
 
         {/* Bottom Navigation */}
-        <div className="absolute left-0 right-0 flex justify-center gap-[142px]" style={{ bottom: 'calc(20px + env(safe-area-inset-bottom))' }}>
+        <div className="absolute left-0 right-0 flex justify-center gap-[142px]" style={{ bottom: 'calc(24px + env(safe-area-inset-bottom))' }}>
           <button className="w-[21px] h-[21px] flex items-center justify-center text-[#454545] hover:opacity-70 transition-opacity">
             <Home className="w-full h-full" />
           </button>
