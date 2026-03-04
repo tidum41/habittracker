@@ -6,7 +6,19 @@
       "Bash(gh auth status)",
       "Bash(git init)",
       "Bash(git add .)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git remote add origin https://github.com/tidum41/habittracker.git)",
+      "Bash(git remote set-url origin https://github.com/tidum41/habittracker.git)",
+      "Bash(git push -u origin main)",
+      "Bash(git remote set-url origin git@github.com:tidum41/habittracker.git)",
+      "Bash(claude mcp list)",
+      "Bash(claude mcp add framer --transport http \"https://mcp.unframer.co/mcp?id=0898791eb1df488b78cc4a7af0228724e53c9aaa49f015a83c73ccb952f6bdaa&secret=MwJzk9xelE3mIqJmJCKNsQrTJjXphm77\")",
+      "mcp__framer__getProjectXml",
+      "mcp__framer__getNodeXml",
+      "mcp__framer__createCodeFile",
+      "mcp__framer__updateXmlForNode",
+      "mcp__framer__deleteNode",
+      "mcp__framer__updateCodeFile"
     ]
   }
 }

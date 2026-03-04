@@ -164,7 +164,7 @@ export default function App() {
     <div className="bg-[#eaeaea] w-screen h-[100dvh] flex justify-center overflow-hidden">
       <div className="w-full max-w-[393px] h-[100dvh] bg-[#eaeaea] relative">
         {/* Main Content */}
-        <div className="absolute left-[31px] w-[331px]" style={{ top: 'calc(20px + env(safe-area-inset-top))' }}>
+        <div className="absolute left-[31px] w-[331px]" style={{ top: 'calc(90px + env(safe-area-inset-top))' }}>
           {/* Title */}
           <input
             type="text"
