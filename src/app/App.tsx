@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Home, Settings, Check, Pencil } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Home, Settings, Check } from 'lucide-react';
 
 export default function App() {
   const [currentDate] = useState(new Date());
@@ -163,41 +163,38 @@ export default function App() {
   return (
     <div className="bg-[#eaeaea] w-screen h-[100dvh] flex justify-center overflow-hidden">
       <div className="w-full max-w-[393px] h-[100dvh] bg-[#eaeaea] relative">
-        {/* Title & Date — positioned lower, independent of calendar */}
-        <div className="absolute left-[31px] w-[331px]" style={{ top: 'calc(120px + env(safe-area-inset-top))' }}>
-          <div className="flex items-center justify-center gap-[8px] mb-[16px]">
-            <input
-              type="text"
-              value={habitTitle}
-              onChange={(e) => {
-                setHabitTitle(e.target.value);
-                localStorage.setItem('habit-title', e.target.value);
-              }}
-              className="font-['Poppins'] font-medium text-[32px] leading-[26.539px] tracking-[-1px] text-[#454545] text-center bg-transparent border-none outline-none flex-1 min-w-0"
-            />
-            <Pencil className="w-[15px] h-[15px] text-[#454545] opacity-50 flex-shrink-0" strokeWidth={1.5} />
-          </div>
-          <p className="font-['Poppins'] text-[11.795px] leading-[17.693px] tracking-[-0.23px] text-[#717182] text-center">
+        {/* Main Content */}
+        <div className="absolute left-[31px] w-[331px]" style={{ top: 'calc(90px + env(safe-area-inset-top))' }}>
+          {/* Title */}
+          <input
+            type="text"
+            value={habitTitle}
+            onChange={(e) => {
+              setHabitTitle(e.target.value);
+              localStorage.setItem('habit-title', e.target.value);
+            }}
+            className="font-['Poppins'] font-medium text-[32px] leading-[26.539px] tracking-[-1px] text-[#454545] text-center bg-transparent border-none outline-none w-full mb-[16px]"
+          />
+
+          {/* Date Display */}
+          <p className="font-['Poppins'] text-[11.795px] leading-[17.693px] tracking-[-0.23px] text-[#717182] text-center mb-[32px]">
             {formatDateDisplay(currentDate)}
           </p>
-        </div>
 
-        {/* Calendar section — fixed position so current day cell stays put */}
-        <div className="absolute left-[31px] w-[331px]" style={{ top: 'calc(183px + env(safe-area-inset-top))' }}>
           {/* Month Navigation */}
           <div className="flex items-center justify-between mb-[24px]">
-            <button
+            <button 
               onClick={() => navigateMonth('prev')}
               className="w-[30px] h-[30px] rounded-[7.372px] flex items-center justify-center hover:bg-[#d8d8d8] transition-colors"
             >
               <ChevronLeft className="w-[18px] h-[18px] text-[#454545]" strokeWidth={1.5} />
             </button>
-
+            
             <p className="font-['Poppins'] font-medium text-[12px] leading-[17.693px] tracking-[-0.23px] text-[#454545]">
               {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
             </p>
-
-            <button
+            
+            <button 
               onClick={() => navigateMonth('next')}
               className="w-[30px] h-[30px] rounded-[7.372px] flex items-center justify-center hover:bg-[#d8d8d8] transition-colors"
             >
@@ -225,7 +222,7 @@ export default function App() {
           </div>
 
           {/* Streak Card */}
-          <div className="absolute top-[401px] left-[-3px] w-[330px] bg-[#f5f5f5] rounded-[7.372px] p-[12px]">
+          <div className="absolute top-[494px] left-[-3px] w-[330px] bg-[#f5f5f5] rounded-[7.372px] p-[12px]">
             <div className="mb-[6px]">
               <p className="font-['Poppins'] font-medium text-[12px] leading-[17.693px] tracking-[-0.23px] text-[#454545] text-center">
                 {streak} day streak
@@ -234,7 +231,7 @@ export default function App() {
 
             {/* Progress Bar */}
             <div className="bg-[#eaeaea] h-[6px] rounded-full overflow-hidden mb-[6px]">
-              <div
+              <div 
                 className="bg-[#454545] h-full transition-all duration-300"
                 style={{ width: `${(completedDaysThisMonth / daysInCurrentMonth) * 100}%` }}
               />
