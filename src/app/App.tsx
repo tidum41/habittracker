@@ -271,7 +271,7 @@ export default function App() {
               />
             </div>
 
-            <p className="font-['Poppins'] text-[9px] leading-[17.693px] tracking-[-0.23px] text-[#717182] dark:text-[#aeaeb2] opacity-60 text-center">
+            <p className="font-['Poppins'] text-[11px] leading-[17.693px] tracking-[-0.23px] text-[#717182] dark:text-[#aeaeb2] opacity-60 text-center">
               {completedDaysThisMonth}/{daysInCurrentMonth} days
             </p>
           </div>
@@ -279,10 +279,10 @@ export default function App() {
 
         {/* Bottom Navigation */}
         <div className="absolute left-0 right-0 flex justify-center gap-[142px] z-20" style={{ bottom: 'calc(24px + env(safe-area-inset-bottom))' }}>
-          <button onClick={() => setView('home')} className="w-[21px] h-[21px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity">
+          <button onClick={() => setView('home')} className="w-[23px] h-[23px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity">
             <Home className="w-full h-full" />
           </button>
-          <button onClick={() => setView('settings')} className="w-[21px] h-[21px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity">
+          <button onClick={() => setView('settings')} className="w-[23px] h-[23px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity">
             <Settings className="w-full h-full" />
           </button>
         </div>
@@ -300,26 +300,18 @@ export default function App() {
               {/* Back button */}
               <button
                 onPointerDown={() => setView('home')}
-                style={{ top: 'calc(20px + env(safe-area-inset-top))', touchAction: 'manipulation' }}
+                style={{ top: 'calc(50px + env(safe-area-inset-top))', touchAction: 'manipulation' }}
                 className="absolute left-[24px] w-[44px] h-[44px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] active:opacity-50 transition-opacity"
               >
                 <ChevronLeft className="w-[20px] h-[20px]" strokeWidth={1.5} />
               </button>
 
-              {/* Title */}
-              <p
-                style={{ top: 'calc(24px + env(safe-area-inset-top))' }}
-                className="absolute w-full text-center font-['Poppins'] font-medium text-[14px] text-[#454545] dark:text-[#f2f2f7] pointer-events-none"
-              >
-                settings
-              </p>
-
               {/* Dark mode row */}
               <div
-                style={{ top: 'calc(100px + env(safe-area-inset-top))' }}
+                style={{ top: 'calc(130px + env(safe-area-inset-top))' }}
                 className="absolute left-[31px] right-[31px] flex items-center justify-between"
               >
-                <p className="font-['Poppins'] text-[13px] text-[#454545] dark:text-[#f2f2f7]">dark mode</p>
+                <p className="font-['Poppins'] text-[16px] text-[#454545] dark:text-[#f2f2f7]">dark mode</p>
                 <Switch
                   checked={resolvedTheme === 'dark'}
                   onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
