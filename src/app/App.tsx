@@ -138,7 +138,7 @@ export default function App() {
       const isToday = date.toDateString() === currentDate.toDateString();
 
       const cellClass = isToday && isSelected
-        ? 'bg-[#b8b8b8] dark:bg-[#48484a] text-[#eaeaea] dark:text-[#f2f2f7] border border-[#454545] dark:border-[#636366]'
+        ? 'bg-[#b8b8b8] dark:bg-[#5c5c5e] text-[#eaeaea] dark:text-[#f2f2f7] border border-[#454545] dark:border-[#7a7a7c]'
         : isSelected
         ? 'bg-[#454545] dark:bg-[#3a3a3c] text-[#eaeaea] dark:text-[#f2f2f7]'
         : isToday
@@ -278,7 +278,7 @@ export default function App() {
         </div>
 
         {/* Bottom Navigation */}
-        <div className="absolute left-0 right-0 flex justify-center gap-[142px]" style={{ bottom: 'calc(24px + env(safe-area-inset-bottom))' }}>
+        <div className="absolute left-0 right-0 flex justify-center gap-[142px] z-20" style={{ bottom: 'calc(24px + env(safe-area-inset-bottom))' }}>
           <button className="w-[21px] h-[21px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity">
             <Home className="w-full h-full" />
           </button>
@@ -300,7 +300,7 @@ export default function App() {
               {/* Back button */}
               <button
                 onPointerDown={() => setView('home')}
-                style={{ top: 'calc(20px + env(safe-area-inset-top)', touchAction: 'manipulation' }}
+                style={{ top: 'calc(20px + env(safe-area-inset-top))', touchAction: 'manipulation' }}
                 className="absolute left-[24px] w-[44px] h-[44px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] active:opacity-50 transition-opacity"
               >
                 <ChevronLeft className="w-[20px] h-[20px]" strokeWidth={1.5} />
