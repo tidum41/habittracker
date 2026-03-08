@@ -138,11 +138,11 @@ export default function App() {
       const isToday = date.toDateString() === currentDate.toDateString();
 
       const cellClass = isToday && isSelected
-        ? 'bg-[#b8b8b8] dark:bg-[#555] text-[#eaeaea] dark:text-[#f2f2f7] border border-[#454545] dark:border-[#f2f2f7]'
+        ? 'bg-[#b8b8b8] dark:bg-[#48484a] text-[#eaeaea] dark:text-[#f2f2f7] border border-[#454545] dark:border-[#636366]'
         : isSelected
-        ? 'bg-[#454545] dark:bg-[#e0e0e0] text-[#eaeaea] dark:text-[#1c1c1e]'
+        ? 'bg-[#454545] dark:bg-[#3a3a3c] text-[#eaeaea] dark:text-[#f2f2f7]'
         : isToday
-        ? 'bg-[#f5f5f5] dark:bg-[#2c2c2e] border border-[#454545] dark:border-[#f2f2f7] text-[#454545] dark:text-[#f2f2f7]'
+        ? 'bg-[#f5f5f5] dark:bg-[#48484a] border border-[#454545] dark:border-[#636366] text-[#454545] dark:text-[#f2f2f7]'
         : 'bg-[#f5f5f5] dark:bg-[#2c2c2e] text-[#454545] dark:text-[#f2f2f7] opacity-60';
 
       days.push(
@@ -152,7 +152,7 @@ export default function App() {
           className={`w-[42px] h-[42px] rounded-[5px] flex items-center justify-center transition-all hover:opacity-80 ${cellClass}`}
         >
           {isSelected ? (
-            <Check className="w-[15px] h-[15px] text-[#eaeaea] dark:text-[#1c1c1e]" strokeWidth={1.5} />
+            <Check className="w-[15px] h-[15px] text-[#eaeaea] dark:text-[#f2f2f7]" strokeWidth={1.5} />
           ) : (
             <span className="font-['Poppins'] text-[11.795px] leading-[17.693px] tracking-[-0.23px]">
               {day}
@@ -299,9 +299,9 @@ export default function App() {
             >
               {/* Back button */}
               <button
-                onClick={() => setView('home')}
-                style={{ top: 'calc(20px + env(safe-area-inset-top))' }}
-                className="absolute left-[24px] w-[30px] h-[30px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity"
+                onPointerDown={() => setView('home')}
+                style={{ top: 'calc(20px + env(safe-area-inset-top)', touchAction: 'manipulation' }}
+                className="absolute left-[24px] w-[44px] h-[44px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] active:opacity-50 transition-opacity"
               >
                 <ChevronLeft className="w-[20px] h-[20px]" strokeWidth={1.5} />
               </button>
