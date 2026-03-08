@@ -1,5 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ChevronLeft, ChevronRight, Home, Settings, Check } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Switch } from './components/ui/switch';
+import { useTheme } from 'next-themes';
 
 export default function App() {
   const [currentDate] = useState(new Date());
@@ -15,6 +18,9 @@ export default function App() {
   const [habitTitle, setHabitTitle] = useState(() =>
     localStorage.getItem('habit-title') || 'type habit here'
   );
+  const [view, setView] = useState<'home' | 'settings'>('home');
+  const [direction, setDirection] = useState(1);
+  const { resolvedTheme, setTheme } = useTheme();
 
   // Calculate streak
   const calculateStreak = () => {
@@ -75,14 +81,21 @@ export default function App() {
     return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
   };
 
-  const navigateMonth = (direction: 'prev' | 'next') => {
+  const navigateMonth = (dir: 'prev' | 'next') => {
+    setDirection(dir === 'next' ? 1 : -1);
     const newMonth = new Date(currentMonth);
-    if (direction === 'prev') {
+    if (dir === 'prev') {
       newMonth.setMonth(newMonth.getMonth() - 1);
     } else {
       newMonth.setMonth(newMonth.getMonth() + 1);
     }
     setCurrentMonth(newMonth);
+  };
+
+  const slideVariants = {
+    enter: (d: number) => ({ x: d > 0 ? 24 : -24, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit:  (d: number) => ({ x: d > 0 ? -24 : 24, opacity: 0 }),
   };
 
   const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 
@@ -125,12 +138,12 @@ export default function App() {
       const isToday = date.toDateString() === currentDate.toDateString();
 
       const cellClass = isToday && isSelected
-        ? 'bg-[#b8b8b8] text-[#eaeaea] border border-[#454545]'
+        ? 'bg-[#b8b8b8] dark:bg-[#555] text-[#eaeaea] dark:text-[#f2f2f7] border border-[#454545] dark:border-[#f2f2f7]'
         : isSelected
-        ? 'bg-[#454545] text-[#eaeaea]'
+        ? 'bg-[#454545] dark:bg-[#e0e0e0] text-[#eaeaea] dark:text-[#1c1c1e]'
         : isToday
-        ? 'bg-[#f5f5f5] border border-[#454545] text-[#454545]'
-        : 'bg-[#f5f5f5] text-[#454545] opacity-60';
+        ? 'bg-[#f5f5f5] dark:bg-[#2c2c2e] border border-[#454545] dark:border-[#f2f2f7] text-[#454545] dark:text-[#f2f2f7]'
+        : 'bg-[#f5f5f5] dark:bg-[#2c2c2e] text-[#454545] dark:text-[#f2f2f7] opacity-60';
 
       days.push(
         <button
@@ -139,7 +152,7 @@ export default function App() {
           className={`w-[42px] h-[42px] rounded-[5px] flex items-center justify-center transition-all hover:opacity-80 ${cellClass}`}
         >
           {isSelected ? (
-            <Check className="w-[15px] h-[15px] text-[#eaeaea]" strokeWidth={1.5} />
+            <Check className="w-[15px] h-[15px] text-[#eaeaea] dark:text-[#1c1c1e]" strokeWidth={1.5} />
           ) : (
             <span className="font-['Poppins'] text-[11.795px] leading-[17.693px] tracking-[-0.23px]">
               {day}
@@ -161,8 +174,8 @@ export default function App() {
   }).length;
 
   return (
-    <div className="bg-[#eaeaea] w-screen h-[100dvh] flex justify-center overflow-hidden">
-      <div className="w-full max-w-[393px] h-[100dvh] bg-[#eaeaea] relative">
+    <div className="bg-[#eaeaea] dark:bg-[#1c1c1e] w-screen h-[100dvh] flex justify-center overflow-hidden">
+      <div className="w-full max-w-[393px] h-[100dvh] bg-[#eaeaea] dark:bg-[#1c1c1e] relative">
         {/* Main Content */}
         <div className="absolute left-[31px] w-[331px]" style={{ top: 'calc(110px + env(safe-area-inset-top))' }}>
           {/* Title & Date */}
@@ -174,10 +187,10 @@ export default function App() {
                 setHabitTitle(e.target.value);
                 localStorage.setItem('habit-title', e.target.value);
               }}
-              className="font-['Poppins'] font-medium text-[32px] leading-[26.539px] tracking-[-1px] text-[#454545] text-center bg-transparent border-none outline-none w-full mb-[8px]"
+              className="font-['Poppins'] font-medium text-[32px] leading-[26.539px] tracking-[-1px] text-[#454545] dark:text-[#f2f2f7] text-center bg-transparent border-none outline-none w-full mb-[8px]"
             />
 
-            <p className="font-['Poppins'] text-[11.795px] leading-[17.693px] tracking-[-0.23px] text-[#717182] text-center mb-[32px]">
+            <p className="font-['Poppins'] text-[11.795px] leading-[17.693px] tracking-[-0.23px] text-[#717182] dark:text-[#aeaeb2] text-center mb-[32px]">
               {formatDateDisplay(currentDate)}
             </p>
           </div>
@@ -186,57 +199,79 @@ export default function App() {
           <div className="relative flex items-center justify-center mb-[20px]" style={{ transform: 'translateY(8px)' }}>
             <button
               onClick={() => navigateMonth('prev')}
-              className="absolute left-0 w-[30px] h-[30px] rounded-[7.372px] flex items-center justify-center hover:bg-[#d8d8d8] transition-colors"
+              className="absolute left-0 w-[30px] h-[30px] rounded-[7.372px] flex items-center justify-center hover:bg-[#d8d8d8] dark:hover:bg-[#3a3a3c] transition-colors"
             >
-              <ChevronLeft className="w-[18px] h-[18px] text-[#454545]" strokeWidth={1.5} />
+              <ChevronLeft className="w-[18px] h-[18px] text-[#454545] dark:text-[#f2f2f7]" strokeWidth={1.5} />
             </button>
 
-            <p className="font-['Poppins'] text-[12px] leading-[17.693px] tracking-[-0.23px] text-[#454545] opacity-60">
-              {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
-            </p>
+            <AnimatePresence mode="wait" initial={false} custom={direction}>
+              <motion.p
+                key={currentMonth.getTime()}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{ duration: 0.18, ease: 'easeOut' }}
+                className="font-['Poppins'] text-[12px] leading-[17.693px] tracking-[-0.23px] text-[#454545] dark:text-[#f2f2f7] opacity-60"
+              >
+                {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+              </motion.p>
+            </AnimatePresence>
 
             <button
               onClick={() => navigateMonth('next')}
-              className="absolute right-0 w-[30px] h-[30px] rounded-[7.372px] flex items-center justify-center hover:bg-[#d8d8d8] transition-colors"
+              className="absolute right-0 w-[30px] h-[30px] rounded-[7.372px] flex items-center justify-center hover:bg-[#d8d8d8] dark:hover:bg-[#3a3a3c] transition-colors"
             >
-              <ChevronRight className="w-[18px] h-[18px] text-[#454545]" strokeWidth={1.5} />
+              <ChevronRight className="w-[18px] h-[18px] text-[#454545] dark:text-[#f2f2f7]" strokeWidth={1.5} />
             </button>
           </div>
 
           {/* Calendar */}
-          <div className="space-y-[18px]">
-            {/* Day Names */}
-            <div className="grid grid-cols-7 gap-0" style={{ transform: 'translateY(6px)' }}>
-              {dayNames.map(day => (
-                <div key={day} className="w-[42px] h-[30px] flex items-center justify-center">
-                  <p className="font-['Poppins'] text-[9px] leading-[17.693px] tracking-[-0.23px] text-[#717182] opacity-60">
-                    {day}
-                  </p>
-                </div>
-              ))}
-            </div>
+          <AnimatePresence mode="wait" initial={false} custom={direction}>
+            <motion.div
+              key={currentMonth.getTime()}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.18, ease: 'easeOut' }}
+              className="space-y-[18px]"
+            >
+              {/* Day Names */}
+              <div className="grid grid-cols-7 gap-0" style={{ transform: 'translateY(6px)' }}>
+                {dayNames.map(day => (
+                  <div key={day} className="w-[42px] h-[30px] flex items-center justify-center">
+                    <p className="font-['Poppins'] text-[9px] leading-[17.693px] tracking-[-0.23px] text-[#717182] dark:text-[#aeaeb2] opacity-60">
+                      {day}
+                    </p>
+                  </div>
+                ))}
+              </div>
 
-            {/* Calendar Grid */}
-            <div className="grid grid-cols-7 gap-[6px]">
-              {renderCalendar()}
-            </div>
-          </div>
+              {/* Calendar Grid */}
+              <div className="grid grid-cols-7 gap-[6px]">
+                {renderCalendar()}
+              </div>
+            </motion.div>
+          </AnimatePresence>
 
           {/* Streak */}
           <div className="absolute top-[517px] left-[-3px] w-[330px] px-[3px]">
-            <p className="font-['Poppins'] text-[15px] leading-[22px] tracking-[-0.3px] text-[#454545] text-center mb-[8px]">
+            <p className="font-['Poppins'] text-[15px] leading-[22px] tracking-[-0.3px] text-[#454545] dark:text-[#f2f2f7] text-center mb-[8px]">
               {streak} day streak
             </p>
 
             {/* Progress Bar */}
-            <div className="bg-[#c8c8c8] h-[4px] rounded-full overflow-hidden mb-[6px]">
+            <div className="bg-[#c8c8c8] dark:bg-[#3a3a3c] h-[4px] rounded-full overflow-hidden mb-[6px]">
               <div
-                className="bg-[#454545] h-full transition-all duration-300"
+                className="bg-[#454545] dark:bg-[#e0e0e0] h-full transition-all duration-300"
                 style={{ width: `${(completedDaysThisMonth / daysInCurrentMonth) * 100}%` }}
               />
             </div>
 
-            <p className="font-['Poppins'] text-[9px] leading-[17.693px] tracking-[-0.23px] text-[#717182] opacity-60 text-center">
+            <p className="font-['Poppins'] text-[9px] leading-[17.693px] tracking-[-0.23px] text-[#717182] dark:text-[#aeaeb2] opacity-60 text-center">
               {completedDaysThisMonth}/{daysInCurrentMonth} days
             </p>
           </div>
@@ -244,13 +279,55 @@ export default function App() {
 
         {/* Bottom Navigation */}
         <div className="absolute left-0 right-0 flex justify-center gap-[142px]" style={{ bottom: 'calc(24px + env(safe-area-inset-bottom))' }}>
-          <button className="w-[21px] h-[21px] flex items-center justify-center text-[#454545] hover:opacity-70 transition-opacity">
+          <button className="w-[21px] h-[21px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity">
             <Home className="w-full h-full" />
           </button>
-          <button className="w-[21px] h-[21px] flex items-center justify-center text-[#454545] hover:opacity-70 transition-opacity">
+          <button onClick={() => setView('settings')} className="w-[21px] h-[21px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity">
             <Settings className="w-full h-full" />
           </button>
         </div>
+
+        {/* Settings Screen */}
+        <AnimatePresence>
+          {view === 'settings' && (
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              className="absolute inset-0 z-10 bg-[#eaeaea] dark:bg-[#1c1c1e]"
+            >
+              {/* Back button */}
+              <button
+                onClick={() => setView('home')}
+                style={{ top: 'calc(20px + env(safe-area-inset-top))' }}
+                className="absolute left-[24px] w-[30px] h-[30px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity"
+              >
+                <ChevronLeft className="w-[20px] h-[20px]" strokeWidth={1.5} />
+              </button>
+
+              {/* Title */}
+              <p
+                style={{ top: 'calc(24px + env(safe-area-inset-top))' }}
+                className="absolute w-full text-center font-['Poppins'] font-medium text-[14px] text-[#454545] dark:text-[#f2f2f7]"
+              >
+                settings
+              </p>
+
+              {/* Dark mode row */}
+              <div
+                style={{ top: 'calc(100px + env(safe-area-inset-top))' }}
+                className="absolute left-[31px] right-[31px] flex items-center justify-between"
+              >
+                <p className="font-['Poppins'] text-[13px] text-[#454545] dark:text-[#f2f2f7]">dark mode</p>
+                <Switch
+                  checked={resolvedTheme === 'dark'}
+                  onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')}
+                />
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
