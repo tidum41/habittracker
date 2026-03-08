@@ -279,7 +279,7 @@ export default function App() {
 
         {/* Bottom Navigation */}
         <div className="absolute left-0 right-0 flex justify-center gap-[142px] z-20" style={{ bottom: 'calc(24px + env(safe-area-inset-bottom))' }}>
-          <button className="w-[21px] h-[21px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity">
+          <button onClick={() => setView('home')} className="w-[21px] h-[21px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity">
             <Home className="w-full h-full" />
           </button>
           <button onClick={() => setView('settings')} className="w-[21px] h-[21px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity">
@@ -309,7 +309,7 @@ export default function App() {
               {/* Title */}
               <p
                 style={{ top: 'calc(24px + env(safe-area-inset-top))' }}
-                className="absolute w-full text-center font-['Poppins'] font-medium text-[14px] text-[#454545] dark:text-[#f2f2f7]"
+                className="absolute w-full text-center font-['Poppins'] font-medium text-[14px] text-[#454545] dark:text-[#f2f2f7] pointer-events-none"
               >
                 settings
               </p>
