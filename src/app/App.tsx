@@ -183,9 +183,12 @@ export default function App() {
             <input
               type="text"
               value={habitTitle}
+              onFocus={() => { if (habitTitle === 'type habit here') setHabitTitle(''); }}
+              onBlur={() => { if (habitTitle === '') setHabitTitle('type habit here'); }}
               onChange={(e) => {
                 setHabitTitle(e.target.value);
-                localStorage.setItem('habit-title', e.target.value);
+                if (e.target.value) localStorage.setItem('habit-title', e.target.value);
+                else localStorage.removeItem('habit-title');
               }}
               className="font-['Poppins'] font-medium text-[32px] leading-[26.539px] tracking-[-1px] text-[#454545] dark:text-[#f2f2f7] text-center bg-transparent border-none outline-none w-full mb-[8px]"
             />
