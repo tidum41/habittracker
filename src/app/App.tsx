@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Home, Settings, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Switch } from './components/ui/switch';
