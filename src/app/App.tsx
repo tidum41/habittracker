@@ -287,7 +287,7 @@ export default function App() {
         {/* Theme toggle — top right */}
         <button
           onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-          className="absolute right-[8px] z-20 w-[44px] h-[44px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7]"
+          className="absolute right-[31px] z-20 w-[44px] h-[44px] flex items-center justify-end text-[#454545] dark:text-[#f2f2f7]"
           style={{ top: '62px' }}
         >
           {resolvedTheme === 'dark'
