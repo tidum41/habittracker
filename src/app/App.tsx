@@ -287,12 +287,12 @@ export default function App() {
         {/* Theme toggle — top right */}
         <button
           onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-          className="absolute right-[31px] z-20 w-[23px] h-[23px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity"
+          className="absolute right-[8px] z-20 w-[44px] h-[44px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7]"
           style={{ top: '62px' }}
         >
           {resolvedTheme === 'dark'
-            ? <Sun className="w-full h-full" strokeWidth={1.5} />
-            : <Moon className="w-full h-full" strokeWidth={1.5} />}
+            ? <Sun className="w-[23px] h-[23px]" strokeWidth={1.5} />
+            : <Moon className="w-[23px] h-[23px]" strokeWidth={1.5} />}
         </button>
       </div>
     </div>
