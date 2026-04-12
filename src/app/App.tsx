@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Home, Sun, Moon, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Sun, Moon, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTheme } from 'next-themes';
 
@@ -279,20 +279,16 @@ export default function App() {
           </div>
         </div>
 
-        {/* Bottom Navigation */}
-        <div className="absolute left-0 right-0 flex justify-center gap-[142px] z-20" style={{ bottom: 'calc(24px + env(safe-area-inset-bottom))' }}>
-          <button className="w-[23px] h-[23px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7]">
-            <Home className="w-full h-full" />
-          </button>
-          <button
-            onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-            className="w-[23px] h-[23px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity"
-          >
-            {resolvedTheme === 'dark'
-              ? <Sun className="w-full h-full" strokeWidth={1.5} />
-              : <Moon className="w-full h-full" strokeWidth={1.5} />}
-          </button>
-        </div>
+        {/* Theme toggle — top right */}
+        <button
+          onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+          className="absolute right-[24px] z-20 w-[23px] h-[23px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity"
+          style={{ top: 'calc(16px + env(safe-area-inset-top))' }}
+        >
+          {resolvedTheme === 'dark'
+            ? <Sun className="w-full h-full" strokeWidth={1.5} />
+            : <Moon className="w-full h-full" strokeWidth={1.5} />}
+        </button>
       </div>
     </div>
   );
