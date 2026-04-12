@@ -283,7 +283,7 @@ export default function App() {
         <button
           onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
           className="absolute right-[24px] z-20 w-[23px] h-[23px] flex items-center justify-center text-[#454545] dark:text-[#f2f2f7] hover:opacity-70 transition-opacity"
-          style={{ top: 'calc(16px + env(safe-area-inset-top))' }}
+          style={{ top: '62px' }}
         >
           {resolvedTheme === 'dark'
             ? <Sun className="w-full h-full" strokeWidth={1.5} />
