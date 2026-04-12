@@ -37,6 +37,11 @@ export default function App() {
   const [direction, setDirection] = useState(1);
   const { resolvedTheme, setTheme } = useTheme();
 
+  useEffect(() => {
+    const isDark = resolvedTheme === 'dark'
+    window.parent.postMessage({ theme: isDark ? 'dark' : 'light' }, '*')
+  }, [resolvedTheme])
+
   const calculateStreak = () => {
     const sortedDates = Array.from(selectedDates).sort().reverse();
     if (sortedDates.length === 0) return 0;
