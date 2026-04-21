@@ -1,21 +1,52 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Sun, Moon, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTheme } from 'next-themes';
 
 export default function App() {
+  const targetInputRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null)
+
   useEffect(() => {
     function handleMessage(e: MessageEvent) {
-      if (e.data?.type !== 'framer-click') return
-      const el = document.elementFromPoint(e.data.x, e.data.y)
-      if (!el) return
-      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
-        el.focus()
+      if (!e.data || typeof e.data !== 'object') return
+
+      if (e.data.type === 'framer-click') {
+        const el = document.elementFromPoint(e.data.x, e.data.y)
+        if (!el) return
+        if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+          targetInputRef.current = el
+          el.focus()
+          // Wait one tick so React's onFocus (which clears placeholder) runs first
+          setTimeout(() => {
+            window.parent.postMessage({
+              type: 'framer-needs-keyboard',
+              currentValue: (targetInputRef.current as HTMLInputElement)?.value ?? ''
+            }, '*')
+          }, 0)
+          return
+        }
+        targetInputRef.current = null
+        window.parent.postMessage({ type: 'framer-no-keyboard' }, '*')
+        el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }))
+        el.dispatchEvent(new PointerEvent('pointerup',   { bubbles: true, cancelable: true }))
+        el.dispatchEvent(new MouseEvent('click',         { bubbles: true, cancelable: true }))
         return
       }
-      el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }))
-      el.dispatchEvent(new PointerEvent('pointerup',   { bubbles: true, cancelable: true }))
-      el.dispatchEvent(new MouseEvent('click',         { bubbles: true, cancelable: true }))
+
+      if (e.data.type === 'framer-text-value') {
+        const el = targetInputRef.current
+        if (!el) return
+        // React-controlled inputs need the native setter to trigger onChange
+        const nativeSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
+        nativeSetter?.call(el, e.data.value)
+        el.dispatchEvent(new Event('input', { bubbles: true }))
+        return
+      }
+
+      if (e.data.type === 'framer-keyboard-done') {
+        targetInputRef.current?.blur()
+        targetInputRef.current = null
+      }
     }
     window.addEventListener('message', handleMessage)
     return () => window.removeEventListener('message', handleMessage)
