@@ -13,19 +13,28 @@ export default function App() {
       if (e.data.type === 'framer-click') {
         const el = document.elementFromPoint(e.data.x, e.data.y)
         if (!el) return
+
         if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
           targetInputRef.current = el
-          el.focus()
-          // Wait one tick so React's onFocus (which clears placeholder) runs first
-          setTimeout(() => {
-            window.parent.postMessage({
-              type: 'framer-needs-keyboard',
-              currentValue: (targetInputRef.current as HTMLInputElement)?.value ?? ''
-            }, '*')
-          }, 0)
+
+          if (e.data.useRelay) {
+            // Touch/mobile path: dispatch focusin so React's onFocus fires (clears placeholder)
+            // without moving browser focus — that would steal keyboard from parent's hidden input.
+            el.dispatchEvent(new FocusEvent('focusin', { bubbles: true }))
+            setTimeout(() => {
+              window.parent.postMessage({
+                type: 'framer-needs-keyboard',
+                currentValue: (targetInputRef.current as HTMLInputElement)?.value ?? ''
+              }, '*')
+            }, 0)
+          } else {
+            // Desktop path: focus normally so user types directly into the iframe.
+            el.focus()
+          }
           return
         }
-        targetInputRef.current = null
+
+        // Not an input — tell parent to dismiss keyboard if open
         window.parent.postMessage({ type: 'framer-no-keyboard' }, '*')
         el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }))
         el.dispatchEvent(new PointerEvent('pointerup',   { bubbles: true, cancelable: true }))
@@ -44,7 +53,11 @@ export default function App() {
       }
 
       if (e.data.type === 'framer-keyboard-done') {
-        targetInputRef.current?.blur()
+        const el = targetInputRef.current
+        if (el) {
+          // Dispatch focusout so React's onBlur fires (restores placeholder if input is empty)
+          el.dispatchEvent(new FocusEvent('focusout', { bubbles: true }))
+        }
         targetInputRef.current = null
       }
     }
