@@ -10,7 +10,6 @@ export default function App() {
       const el = document.elementFromPoint(e.data.x, e.data.y)
       if (!el) return
       if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
-        el.focus()
         return
       }
       el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }))
