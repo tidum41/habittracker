@@ -1,69 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Sun, Moon, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTheme } from 'next-themes';
 
 export default function App() {
-  const targetInputRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null)
-
   useEffect(() => {
-    function handleMessage(e: MessageEvent) {
-      if (!e.data || typeof e.data !== 'object') return
-
-      if (e.data.type === 'framer-click') {
-        const el = document.elementFromPoint(e.data.x, e.data.y)
-        if (!el) return
-
-        if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
-          targetInputRef.current = el
-
-          if (e.data.useRelay) {
-            // Touch/mobile path: dispatch focusin so React's onFocus fires (clears placeholder)
-            // without moving browser focus — that would steal keyboard from parent's hidden input.
-            el.dispatchEvent(new FocusEvent('focusin', { bubbles: true }))
-            setTimeout(() => {
-              window.parent.postMessage({
-                type: 'framer-needs-keyboard',
-                currentValue: (targetInputRef.current as HTMLInputElement)?.value ?? ''
-              }, '*')
-            }, 0)
-          } else {
-            // Desktop path: focus normally so user types directly into the iframe.
-            el.focus()
-          }
-          return
-        }
-
-        // Not an input — tell parent to dismiss keyboard if open
-        window.parent.postMessage({ type: 'framer-no-keyboard' }, '*')
-        el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }))
-        el.dispatchEvent(new PointerEvent('pointerup',   { bubbles: true, cancelable: true }))
-        el.dispatchEvent(new MouseEvent('click',         { bubbles: true, cancelable: true }))
-        return
-      }
-
-      if (e.data.type === 'framer-text-value') {
-        const el = targetInputRef.current
-        if (!el) return
-        // React-controlled inputs need the native setter to trigger onChange
-        const nativeSetter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set
-        nativeSetter?.call(el, e.data.value)
-        el.dispatchEvent(new Event('input', { bubbles: true }))
-        return
-      }
-
-      if (e.data.type === 'framer-keyboard-done') {
-        const el = targetInputRef.current
-        if (el) {
-          // Dispatch focusout so React's onBlur fires (restores placeholder if input is empty)
-          el.dispatchEvent(new FocusEvent('focusout', { bubbles: true }))
-        }
-        targetInputRef.current = null
-      }
-    }
-    window.addEventListener('message', handleMessage)
-    return () => window.removeEventListener('message', handleMessage)
-  }, [])
+    const isDark = resolvedTheme === 'dark'
+    window.parent.postMessage({ theme: isDark ? 'dark' : 'light' }, '*')
+  }, [resolvedTheme])
 
   const [currentDate] = useState(new Date());
   const [selectedDates, setSelectedDates] = useState<Set<string>>(() => {
