@@ -4,11 +4,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useTheme } from 'next-themes';
 
 export default function App() {
-  useEffect(() => {
-    const isDark = resolvedTheme === 'dark'
-    window.parent.postMessage({ theme: isDark ? 'dark' : 'light' }, '*')
-  }, [resolvedTheme])
-
   const [currentDate] = useState(new Date());
   const [selectedDates, setSelectedDates] = useState<Set<string>>(() => {
     const saved = localStorage.getItem('habit-selected-dates');
