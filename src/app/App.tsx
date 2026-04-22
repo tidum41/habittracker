@@ -4,6 +4,23 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useTheme } from 'next-themes';
 
 export default function App() {
+  useEffect(() => {
+    function handleMessage(e: MessageEvent) {
+      if (e.data?.type !== 'framer-click') return
+      const el = document.elementFromPoint(e.data.x, e.data.y)
+      if (!el) return
+      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
+        el.focus()
+        return
+      }
+      el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }))
+      el.dispatchEvent(new PointerEvent('pointerup',   { bubbles: true, cancelable: true }))
+      el.dispatchEvent(new MouseEvent('click',         { bubbles: true, cancelable: true }))
+    }
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [])
+
   const [currentDate] = useState(new Date());
   const [selectedDates, setSelectedDates] = useState<Set<string>>(() => {
     const saved = localStorage.getItem('habit-selected-dates');
