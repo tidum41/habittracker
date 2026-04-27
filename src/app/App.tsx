@@ -6,15 +6,22 @@ import { useTheme } from 'next-themes';
 export default function App() {
   useEffect(() => {
     function handleMessage(e: MessageEvent) {
-      if (e.data?.type !== 'framer-click') return
-      const el = document.elementFromPoint(e.data.x, e.data.y)
+      if (e.data?.type !== 'framer-pointer') return
+      const { eventType, x, y } = e.data as { eventType: 'click' | 'pointerdown', x: number, y: number }
+      const el = document.elementFromPoint(x, y)
       if (!el) return
       if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
-        return
+        el.focus()
       }
-      el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }))
-      el.dispatchEvent(new PointerEvent('pointerup',   { bubbles: true, cancelable: true }))
-      el.dispatchEvent(new MouseEvent('click',         { bubbles: true, cancelable: true }))
+      if (eventType === 'click') {
+        if (el instanceof HTMLElement) {
+          el.click()
+        } else {
+          el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, clientX: x, clientY: y }))
+        }
+      } else if (eventType === 'pointerdown') {
+        el.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, clientX: x, clientY: y }))
+      }
     }
     window.addEventListener('message', handleMessage)
     return () => window.removeEventListener('message', handleMessage)
